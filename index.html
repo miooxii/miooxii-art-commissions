@@ -431,6 +431,20 @@
       flex: 5;
     }
 
+  /* PHONES */
+  @media (max-width: 700px) {
+  .artgallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;   /* 2 pictures per row */
+    height: auto;
+  }
+
+  .artgallery > div {
+    height: 220px;
+    background-size: cover;           /* picture fills the whole box */
+  }
+}
+    
   </style>
 </head>
 

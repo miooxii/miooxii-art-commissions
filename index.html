@@ -10,166 +10,228 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background-color: #A8D0E6; color: #fdfdfd; font-family: 'Press Start 2P', monospace; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    /* VIDEO / GIF BACKGROUND */
+    .video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: -1; opacity: 0.5; }
+    .video video { width: 100%; height: 100%; object-fit: cover; }
 
-    body {
-      margin: 0;
-      background-color: #A8D0E6;
-      color: #fdfdfd;
-      font-family: 'Press Start 2P', monospace;
-    }
+    /* STICKY NAVIGATION */
+    .navigationcontainer { position: sticky; top: 0; z-index: 100; }
 
-    body.noscroll {
-      overflow: hidden;
-    }
-
-    .row {
-      width: 90%;
-      max-width: 900px;
-      margin: 50px auto;
-    }
-
-    /* START SCREEN */
-    #start-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgb(185, 196, 207);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      cursor: pointer;
-      z-index: 100;
-      transition: opacity 0.6s;
-    }
-
-    #start-screen.hide {
-      opacity: 0;
-      pointer-events: none; 
-    }
-
-    #start-screen p {
-      animation: blink 1s steps(2) infinite;
-    }
-
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
-
-    /* VIDEO BACKGROUND */
-    .video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      z-index: -1;
-      opacity: 0.5;
-    }
-
-    .video video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* NAVIGATION */
-    .navigationcontainer {
-      position: relative;
-    }
-    .navigationcontainer.heading {
-      position: sticky;
-      top: 0;
-      z-index: 50;    
-    }
-    
     .navigation {
       background-color: #283a81;
-      border: 6px solid white;
-      border-radius: 16px;
-      box-shadow: 8px 8px 0 #33176f;
-      margin: 20px auto;
-      width: 90%;
-      max-width: 900px;
-      padding: 10px;
+      border-bottom: 6px solid white;
+      box-shadow: 0 6px 0 #33176f;
+      padding: 10px 20px;
       display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 20px;
     }
 
-    .navigation a {
+    .nav-side { flex: 1 1 0; display: flex; align-items: center; justify-content: space-around; gap: 6px; }
+
+    .navigation a {  
       color: white;
       text-decoration: none;
       font-size: 11px;
       padding: 12px 14px;
       border-radius: 10px;
+      white-space: nowrap;
     }
 
-    .navigation a:hover {
-      background-color: #5a68a1; 
+    .navigation a:hover { background-color: #5a68a1; }
+
+    /* COMMISSION STATUS BADGE THINGY */
+    .status-badge {
+      align-self: flex-start;
+      margin-bottom: -34px;
+      position: relative;
+      z-index: 2;
+      min-width: 190px;
+      padding: 12px 18px 14px;
+      text-align: center;
+      background-color: #1d2a61;
+      border: 6px solid white;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 6px 6px 0 #33176f;
     }
 
-    /* CONTENTS OF LITERAL */
-    .site {
-      opacity: 0;
-      transition: opacity 0.8s;
-      width: 100%;
-      padding: 20px;
-    }
+    .status-label { display: block; font-size: 8px; color: #cfd8ff; margin-bottom: 10px; }
+    .status-value { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
+    .status-dot { width: 10px; height: 10px; background-color: currentColor; animation: blink 1s steps(2, start) infinite; }
+    @keyframes blink { to { visibility: hidden; } }
 
-    .site.show {
-      opacity: 1;
-    }
+    .status-badge.closed .status-value { color: #ff6b81; }
+    .status-badge.open .status-value { color: #00E676; }
 
-    /* ABOUT ME + SOCIALS ROW */
-    .about-links-row {
-      display: flex;
-      gap: 20px;
+    /* SIZING OF THE WEBSITE? */
+    .site { width: 100%; padding: 0 0 20px; }
+
+    /* BIG BOXES */
+    .boxeyebanner, .boxservices, .boxportfolio, .boxcontact, .boxtos {
+      background-color: #283a81;
+      border: 6px solid white;
+      border-radius: 16px;
+      margin: 50px auto;
       width: 90%;
       max-width: 900px;
-      margin: 50px auto;
-      flex-wrap: wrap;
-      align-items: stretch;
+      box-shadow: 8px 8px 0 #33176f;
       scroll-margin-top: 120px;
     }
 
+    .boxservices, .boxportfolio, .boxcontact { padding: 20px; }
+    .boxeyebanner, .boxtos { overflow: hidden; }
+
+    .boxservices h2, .boxportfolio h2, .boxcontact h2 { margin: 0 0 20px; font-size: 16px; }
+    .boxcontact h2 { margin-bottom: 12px; }
+
+    /* EYE BANNER */
+    .boxeyebanner { position: relative; min-height: 180px; display: flex; align-items: center; margin-top: 70px; }
+    .boxeyebanner::after, .eyebanner { position: absolute; top: 0; right: 0; width: 60%; height: 100%; }
+    .boxeyebanner::after { content: ""; background: linear-gradient(to right, #283a81, transparent); }
+    .eyebanner { object-fit: cover; }
+
+    .boxeyebanner .box-content {
+      position: relative;
+      z-index: 2;
+      padding: 30px 20px;
+      text-align: left;
+      max-width: 55%;
+    }
+
     /* ABOUT SHOP */
+    .about-links-row { width: 90%; max-width: 900px; margin: 50px auto; }
+
     .aboutshop {
       background-color: #fcfcfc;
       border: 6px solid #283a81;
       border-radius: 16px;
-      flex: 1 1 320px;
       box-shadow: 8px 8px 0 #33176f;
       color: black;
       padding: 20px;
       overflow: hidden;
     }
 
-    .aboutshop p {
+    .aboutshop p { font-size: 10px; line-height: 1.8; }
+
+    /* CURRENCY PICKER */
+    .currency-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .currency-row label { font-size: 9px; color: #cfd8ff; }
+
+    /* FONT FOR THE CURRENCY AND CALCULATOR */
+    .pixel-select, .pixel-input {
+      font-family: inherit;
       font-size: 10px;
-      line-height: 1.8;
+      color: white;
+      background-color: #1d2a61;
+      border: 4px solid white;
+      border-radius: 10px;
+      padding: 10px;
     }
 
-    /* SOCIALS */
-    .socials-grid {
-      flex: 1 1 380px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      scroll-margin-top: 120px;
+    .pixel-input { width: 100%; }
+
+    /* COMMISSION GUIDE DISPLAY */
+    .guide-display-container {
+      background-color: #1d2a61;
+      border: 4px solid white;
+      border-radius: 16px;
+      box-shadow: 6px 6px 0 #33176f;
+      padding: 24px 20px;
+      margin-bottom: 24px;
     }
+
+    .guide-display-wrapper { display: flex; align-items: stretch; gap: 24px; width: 100%; }
+
+    .guide-art-box {
+      width: 240px;
+      height: 480px;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .guide-art-box img { height: 100%; width: auto; object-fit: contain; }
+
+    /* BOXES/BADGES FOR THE PRICE GUIDES OF THE ARTWORK */
+    .guide-labels-col { position: relative; height: 480px; flex-grow: 1; }
+
+    .tier-badge-card {
+      position: absolute;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      background-color: #283a81;
+      border: 3px solid white;
+      border-radius: 12px;
+      padding: 10px 14px;
+      box-shadow: 4px 4px 0 #33176f;
+    }
+
+    .tier-badge-card.pos-bust { top: 22%; }
+    .tier-badge-card.pos-half { top: 50%; }
+    .tier-badge-card.pos-full { top: 78%; }
+    .tier-badge-card.pos-chibi { top: 96%; }
+
+    .tier-badge-card .service-price {
+      display: inline-block;
+      margin-bottom: 4px;
+      font-size: 11px;
+      color: #ffd6e0;
+      border-bottom: 2px solid white;
+      padding-bottom: 2px;
+    }
+
+    .tier-badge-card h3 { margin: 0 0 4px; font-size: 10px; line-height: 1.4; }
+    .tier-badge-card p { margin: 0; font-size: 7px; line-height: 1.6; color: #cfd8ff; }
+
+    /* ADD-ONS + SOCIALS GRID */
+    .addons, .socials-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .addons { margin-top: 24px; }
+    .socials-grid { gap: 15px; }
+
+    .addon, .calc {
+      background-color: #1d2a61;
+      border: 4px solid white;
+      border-radius: 16px;
+      box-shadow: 6px 6px 0 #33176f;
+    }
+
+    .addon { padding: 16px; text-align: center; font-size: 10px; line-height: 1.8; }
+    .addon span { color: #ffd6e0; }
+
+    /* PRICE CALCULATOR */
+    .calc { margin-top: 24px; padding: 20px; }
+    .calc h3 { margin: 0 0 16px; font-size: 12px; }
+    .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: end; }
+    .calc label { display: flex; flex-direction: column; gap: 8px; font-size: 8px; color: #cfd8ff; }
+    .calc label.calc-check { flex-direction: row; align-items: center; gap: 10px; }
+    .calc-check input { width: 18px; height: 18px; }
+    .calc-total { margin-top: 18px; text-align: center; font-size: 14px; line-height: 1.8; color: #ffd6e0; }
+
+    .services-note { margin: 20px 0 0; font-size: 8px; line-height: 2; text-align: center; color: #cfd8ff; }
+
+    /* PORTFOLIO */
+    .artgallery { display: flex; height: 20rem; gap: 1rem; }
+
+    .artgallery > div {
+      flex: 1;
+      border: 4px solid white;
+      border-radius: 1rem;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: auto 100%;
+      transition: flex 0.8s cubic-bezier(.25, .4, .45, 1.4);
+    }
+
+    .artgallery > div:hover { flex: 5; }
+
+    /* CONTACT */
+    .boxcontact p { margin: 0 0 20px; font-size: 9px; line-height: 2; color: #cfd8ff; }
 
     .social-box {
       height: 70px;
@@ -188,295 +250,67 @@
       transition: transform 0.2s;
     }
 
-    .social-box:hover {
-      transform: translateY(-2px);
-    }
-
-    .social-box span, .social-box svg {
-      position: relative;
-      z-index: 2;
-    }
-
-    .social-box svg {
-      width: 24px;
-      height: 24px;
-      fill: currentColor;
-    }
-
-    .social-box::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-
-    .social-box:hover::after {
-      opacity: 1;
-    }
-
-    .vgen-box::after {
-      background: linear-gradient(to right, #121212, #00E676);
-    }
-
-    .tiktok-box::after {
-      background: linear-gradient(to right, #121212, #25F4EE, #FE2C55);
-    }
-
-    .kofi-box::after {
-      background: linear-gradient(to right, #121212, #ff4b6e);
-    }
-
-    .ig-box::after {
-      background: linear-gradient(to right, #121212, #e1306c);
-    }
-
-    /* WHERE TO COMMISSION + MY SOCIALS BOXES */
-    .boxcommission, .boxsocials {
-      background-color: #283a81;
-      border: 6px solid white;
-      border-radius: 16px;
-      margin: 50px auto;
-      width: 90%;
-      max-width: 900px;
-      box-shadow: 8px 8px 0 #33176f;
-      padding: 20px;
-      scroll-margin-top: 120px;
-    }
-
-    .boxcommission h2, .boxsocials h2 {
-      margin: 0 0 20px;
-      font-size: 16px;
-    }
-
-    /* EYE BANNER */
-    .box {
-      background-color: #283a81;
-      border: 6px solid white;
-      border-radius: 16px;
-      margin: 20px auto;
-      width: 90%;
-      max-width: 900px;
-      box-shadow: 8px 8px 0 #33176f;
-      overflow: hidden;
-    }
-
-    .boxeyebanner {
-      position: relative;
-      min-height: 180px;
-      display: flex;
-      align-items: center;
-      background-color: #283a81;
-      border: 6px solid white;
-      border-radius: 16px;
-      margin: 50px auto;
-      width: 90%;
-      max-width: 900px;
-      box-shadow: 8px 8px 0 #33176f;
-      overflow: hidden;
-      scroll-margin-top: 120px;
-    }
-
-    .boxeyebanner::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 60%;
-      height: 100%;
-      background: linear-gradient(to right, #283a81, transparent);
-    }
-
-    .boxforfirstscreen {
-      background-color: #283a81;
-      border: 6px solid white;
-      border-radius: 16px;
-      margin: 20px auto;
-      width: 90%;
-      max-width: 900px;
-      box-shadow: 8px 8px 0 #33176f;
-      overflow: hidden;
-    }
-
-    /* EYEBANNER */
-    .eyebanner {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 60%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-    }
-
-    .box-content {
-      padding: 30px 20px;
-      text-align: center;
-    }
-
-    .boxeyebanner .box-content {
-      position: relative;
-      z-index: 2;
-      text-align: left;
-      max-width: 55%;
-    }
-
-    /* COMMISSION STATUS */
-    .status-image-row {
-      display: flex;
-      gap: 20px;
-      width: 90%;
-      max-width: 900px;
-      margin: 50px auto;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .status-box {
-      background-color: #283a81;
-      border: 6px solid white;
-      border-radius: 16px;
-      box-shadow: 8px 8px 0 #33176f;
-      flex: 2 1 300px;
-      padding: 25px 20px;
-      text-align: center;
-    }
-
-    .status-box h2 {
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.6;
-      color: white;
-    }
+    .social-box:hover { transform: translateY(-2px); }
+    .social-box span { position: relative; z-index: 2; }
+    .social-box::after { content: ""; position: absolute; top: 0; right: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.4s ease; }
+    .social-box:hover::after { opacity: 1; }
+    .vgen-box::after { background: linear-gradient(to right, #121212, #00E676); }
+    .kofi-box::after { background: linear-gradient(to right, #121212, #ff4b6e); }
 
     /* TERMS OF SERVICE */
-    .boxtos {
-      background-color: #283a81;
-      border: 6px solid white;
-      border-radius: 16px;
-      margin: 50px auto;
-      width: 90%;
-      max-width: 900px;
-      box-shadow: 8px 8px 0 #33176f;
-      overflow: hidden;
-      scroll-margin-top: 120px;
-    }
+    .tos-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+    .tos-header::-webkit-details-marker { display: none; }
+    .tos-header h2 { margin: 0; font-size: 14px; }
+    .tos-arrow { font-size: 16px; transition: transform 0.3s; }
+    .boxtos[open] .tos-arrow { transform: rotate(180deg); }
 
-    .tos-header {
-      padding: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      user-select: none;
-    }
+    .tos-content { background-color: #1d2a61; border-top: 4px solid white; padding: 20px 30px; }
+    .tos-content ul { margin: 0; padding-left: 20px; font-size: 9px; line-height: 2.2; }
 
-    .tos-header h2 {
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .tos-arrow {
-      font-size: 16px;
-      transition: transform 0.3s;
-    }
-
-    .tos-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease, padding 0.4s ease;
-      background-color: #1d2a61;
-      border-top: 0px solid white;
-    }
-
-    .tos-content.open {
-      max-height: 1500px;
-      border-top: 4px solid white;
-      padding: 20px 30px;
-    }
-
-    .tos-content ul {
-      margin: 0;
-      padding-left: 20px;
-      font-size: 9px;
-      line-height: 2.2;
-    }
-
-    .tos-content li {
-      margin-bottom: 6px;
-    }
-
-    /* PORTFOLIO */
-    .boxportfolio {
-      background-color: #283a81;
-      border: 6px solid white;
-      border-radius: 16px;
-      margin: 50px auto;
-      width: 90%;
-      max-width: 900px;
-      box-shadow: 8px 8px 0 #33176f;
-      padding: 20px;
-      scroll-margin-top: 120px; 
-    }
-
-    .boxportfolio h2 {
-      margin: 0 0 20px;
-      font-size: 16px;
-    }
-
-    /* ART GALLERY / PORTFOLIO*/
-    .artgallery {
-      display: flex;
-      height: 20rem;
-      gap: 1rem;
-    } 
-
-    .artgallery > div {
-      flex: 1;
-      border: 4px solid white;         
-      border-radius: 1rem;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: auto 100%;
-      transition: all .8s cubic-bezier(.25, .4, .45, 1.4);
-    }
-
-    .artgallery > div:hover {
-      flex: 5;
-    }
-
-    /* PHONES */
+    /* PHONE PREVIEW */
     @media (max-width: 700px) {
-      .artgallery {
-        display: grid;
-        grid-template-columns: 1fr 1fr;   
-        height: auto;
+      .artgallery { display: grid; grid-template-columns: 1fr 1fr; height: auto; }
+      .artgallery > div { height: 220px; background-size: cover; }
+
+      .guide-display-wrapper { gap: 12px; }
+      .guide-art-box { width: 110px; height: 380px; }
+
+      .guide-labels-col {
+        height: 380px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
       }
 
-      .artgallery > div {
-        height: 220px;
-        background-size: cover;           
+      .tier-badge-card {
+        position: static;
+        transform: none;
+        padding: 6px 8px;
+        border-width: 2px;
+        box-shadow: 2px 2px 0 #33176f;
       }
-    } 
 
+      .tier-badge-card .service-price { font-size: 9px; margin-bottom: 2px; }
+      .tier-badge-card h3 { font-size: 7px; margin-bottom: 2px; }
+      .tier-badge-card p { font-size: 6px; line-height: 1.3; }
+
+      .addons { grid-template-columns: 1fr; }
+
+      .navigation { flex-direction: column; align-items: center; gap: 8px; padding: 10px; }
+      .navigation a { font-size: 8px; padding: 8px 10px; }
+      .nav-side { flex-wrap: wrap; justify-content: center; width: 100%; }
+
+      .status-badge { order: -1; align-self: center; margin-bottom: 0; min-width: 0; width: 100%; max-width: 260px; border-radius: 12px; }
+      .boxeyebanner { margin-top: 40px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .status-dot { animation: none; }
+    }
   </style>
 </head>
 
-<body class="noscroll">
-
-  <!-- START SCREEN -->
-  <div id="start-screen">
-    <div class="boxforfirstscreen" style="max-width: 500px;">
-      <div class="box-content">
-        <h1 style="font-size: 20px; margin-bottom: 20px;">MIOOXII ART COMMS</h1>
-        <p>PRESS START</p>
-      </div>
-    </div>
-  </div>
+<body>
 
   <!-- VIDEO BG -->
   <div class="video">
@@ -485,22 +319,31 @@
     </video>
   </div>
 
-  <!-- SITE CONTENTS -->
-  <div class="site">
-
-    <!-- NAVIGATION -->
-    <div class="navigationcontainer heading">
-      <div class="navigation">
+  <!-- STICKY NAVIGATION -->
+  <div class="navigationcontainer">
+    <nav class="navigation">
+      <div class="nav-side">
         <a href="#home">HOME</a>
-        <a href="#about-me">ABOUT ME</a>
-        <a href="#where-to-buy">WHERE TO BUY</a>
-        <a href="#socials">SOCIALS</a>
+        <a href="#services">SERVICES</a>
         <a href="#portfolio">PORTFOLIO</a>
+      </div>
+
+      <div class="status-badge closed">
+        <span class="status-label">COMMISSION STATUS</span>
+        <span class="status-value"><span class="status-dot"></span>CLOSED</span>
+      </div>
+
+      <div class="nav-side">
+        <a href="#contact">CONTACT</a>
         <a href="#terms-of-service">TERMS OF SERVICE</a>
       </div>
-    </div>
+    </nav>
+  </div>
 
-    <!-- EYEBANNER (HOME) -->
+  <!-- CONTENTS OF SITE -->
+  <div class="site">
+
+    <!-- EYEBANNER -->
     <div class="boxeyebanner" id="home">
       <img src="eyebanner.png" alt="Header Banner" class="eyebanner">
       <div class="box-content">
@@ -508,29 +351,131 @@
       </div>
     </div>
 
-    <!-- ABOUT ME -->
-    <div class="about-links-row" id="about-me">
+    <!-- ABOUT SHOP -->
+    <div class="about-links-row">
       <div class="aboutshop">
-        <h3>ABOUT ME</h3>
+        <h3>ABOUT SHOP</h3>
         <hr>
-        <p> ⋆˙⟡ hii!! 𐔌՞. .՞𐦯 ᢉ𐭩.ᐟ🍮 ⋆˙⟡ artist ⋆˙⟡ call me moonii or miooxii :3 ⋆˙⟡ i mostly draw anime art + chibis + customs + character pages and more upcoming services :3 ⋆˙⟡</p>
+        <p> ⋆˙⟡ welcome to miooxii art comms!! 𐔌՞. .՞𐦯 ᢉ𐭩.ᐟ🍮 ⋆˙⟡ your cozy art shop for anime illustrations, chibis, custom character designs, character pages & more upcoming services! ⋆˙⟡ thank u for stopping by and supporting my work!! :3 ⋆˙⟡</p>
       </div>
     </div>
 
-    <!-- COMMISSION STATUS -->
-    <div class="status-image-row">
-      <div class="status-box">
-        <h2>COMMISSION STATUS : CLOSED</h2>
+    <!-- SERVICES -->
+    <div class="boxservices" id="services">
+      <h2>SERVICES</h2>
+
+      <!-- CURRENCY -->
+      <div class="currency-row">
+        <label for="currency">VIEW PRICES IN :</label>
+        <select id="currency" class="pixel-select">
+          <option value="USD">USD ($)</option>
+          <option value="PHP">PHP (₱)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="CAD">CAD</option>
+          <option value="AUD">AUD</option>
+          <option value="JPY">JPY (¥)</option>
+        </select>
+      </div>
+
+      <!-- COMMISSION GUIDE -->
+      <div class="guide-display-container">
+        <div class="guide-display-wrapper">
+          
+          <div class="guide-art-box">
+            <img src="figure.png" alt="Full character commission example">
+          </div>
+
+          <div class="guide-labels-col">
+            <div class="tier-badge-card service-card pos-bust" data-name="BUST UP" data-usd="8">
+              <div class="service-price">$8</div>
+              <h3>BUST UP</h3>
+              <p>Head down to chest.</p>
+            </div>
+
+            <div class="tier-badge-card service-card pos-half" data-name="HALF BODY" data-usd="12">
+              <div class="service-price">$12</div>
+              <h3>HALF BODY</h3>
+              <p>Head down to thighs / waist.</p>
+            </div>
+
+            <div class="tier-badge-card service-card pos-full" data-name="FULL BODY" data-usd="16">
+              <div class="service-price">$16</div>
+              <h3>FULL BODY</h3>
+              <p>Full character head to toe.</p>
+            </div>
+
+            <div class="tier-badge-card service-card pos-chibi" data-name="CHIBI / GACHA" data-usd="5">
+              <div class="service-price">$5</div>
+              <h3>CHIBI / GACHA</h3>
+              <p>Cute small full body with a big head.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ADDITIONAL FEES -->
+      <div class="addons">
+        <div class="addon">EXTRA CHARACTER<br><span>+<b id="extra-pct">50</b>%</span></div>
+        <div class="addon">BACKGROUND<br><span>+<b id="bg-pct">70</b>%</span></div>
+      </div>
+
+      <!-- PRICE CALCULATOR -->
+      <div class="calc">
+        <h3>PRICE CALCULATOR</h3>
+        <div class="calc-grid">
+          <label>
+            TYPE
+            <select id="calc-type" class="pixel-select"></select>
+          </label>
+          <label>
+            EXTRA CHARACTERS
+            <input type="number" id="calc-extra" class="pixel-input" min="0" max="10" value="0">
+          </label>
+          <label class="calc-check">
+            <input type="checkbox" id="calc-bg">
+            BACKGROUND
+          </label>
+        </div>
+        <div class="calc-total" id="calc-total"></div>
+      </div>
+
+      <p class="services-note">
+        PRICES ARE IN USD. OTHER CURRENCIES ARE ESTIMATES (RATES AS OF <span id="rates-date">JUL 2026</span>).
+      </p>
+    </div>
+
+    <!-- PORTFOLIO -->
+    <div class="boxportfolio" id="portfolio">
+      <h2>PORTFOLIO</h2>
+      <div class="artgallery">
+        <div style="background-image: url('art1.png');"></div>
+        <div style="background-image: url('art2.png');"></div>
+        <div style="background-image: url('art3.jpg');"></div>
+        <div style="background-image: url('art4.png');"></div>
+        <div style="background-image: url('art5.png');"></div>
+        <div style="background-image: url('art6.png');"></div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="boxcontact" id="contact">
+      <h2>CONTACT</h2>
+      <p>COMMISSIONS ARE HANDLED THROUGH THESE PAGES :</p>
+      <div class="socials-grid">
+        <a href="https://vgen.co/miooxii" target="_blank" rel="noopener" class="social-box vgen-box"><span>VGEN</span></a>
+        <a href="https://ko-fi.com/miooxii" target="_blank" rel="noopener" class="social-box kofi-box"><span>KO-FI</span></a>
       </div>
     </div>
 
     <!-- TERMS OF SERVICE -->
-    <div class="boxtos" id="terms-of-service">
-      <div class="tos-header" onclick="toggleTos()">
+    <details class="boxtos" id="terms-of-service">
+      <summary class="tos-header">
         <h2>TERMS OF SERVICE</h2>
-        <span class="tos-arrow" id="tos-arrow">▼</span>
-      </div>
-      <div class="tos-content" id="tos-content">
+        <span class="tos-arrow">▼</span>
+      </summary>
+      <div class="tos-content">
         <ul>
           <li>For personal or monetized content only.</li>
           <li>First come, first served.</li>
@@ -543,88 +488,66 @@
           <li>Payment is 50% upfront or pay full after the final artwork</li>
         </ul>
       </div>
-    </div>
-
-    <!-- WHERE TO COMMISSION -->
-    <div class="boxcommission" id="where-to-buy">
-      <h2>WHERE TO COMMISSION</h2>
-      <div class="socials-grid">
-        <!-- VGEN -->
-        <a href="https://vgen.co/miooxii" target="_blank" class="social-box vgen-box">
-          <span>VGEN</span>
-        </a>
-
-        <!-- KO-FI -->
-        <a href="https://ko-fi.com/miooxii" target="_blank" class="social-box kofi-box">
-          <span>KO-FI</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- MY SOCIALS -->
-    <div class="boxsocials" id="socials">
-      <h2>MY SOCIALS</h2>
-      <div class="socials-grid">
-        <!-- TIKTOK -->
-        <a href="https://tiktok.com/@miooxii" target="_blank" class="social-box tiktok-box">
-          <span>TIKTOK</span>
-        </a>
-
-        <!-- INSTAGRAM -->
-        <a href="https://www.instagram.com/_itz.miooxii/?hl=en" target="_blank" class="social-box ig-box">
-          <span>IG</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- PORTFOLIO -->
-    <div class="boxportfolio" id="portfolio">
-      <h2>PORTFOLIO</h2>
-
-      <div class="artgallery">
-        <div style="background-image: url('art1.png');"></div>
-        <div style="background-image: url('art2.png');"></div>
-        <div style="background-image: url('art3.jpg');"></div>
-        <div style="background-image: url('art4.png');"></div>
-        <div style="background-image: url('art5.png');"></div>
-        <div style="background-image: url('art6.png');"></div>
-      </div>
-    </div>
+    </details>
 
   </div>
 
-  <!-- SCRIPT -->
   <script>
-    // START SCREEN + GIF BG
-    const startScreen = document.getElementById('start-screen');
-    const site = document.querySelector('.site');
-    const video = document.querySelector('video');
+    const extraPercent = 50;
+    const bgPercent = 70;
+    const ratesDate = "JUL 2026";
+    const rates = { USD: 1, PHP: 61.6, EUR: 0.87, GBP: 0.74, CAD: 1.40, AUD: 1.43, JPY: 162 };
 
-    // STARTER SCREEN CLICK
-    startScreen.onclick = function () {
-      video.play();                                  // play the video
-      document.body.classList.remove('noscroll');    // let the page scroll
-      window.scrollTo(0, 0);                         // go to the top
-      startScreen.classList.add('hide');             // fade out the start screen
-      site.classList.add('show');                    // fade in the site
-      setTimeout(function () {
-        startScreen.remove();                        // delete it after it fades
-      }, 600);
-    };
+    const currency = document.getElementById("currency");
+    const typeSelect = document.getElementById("calc-type");
+    const extraInput = document.getElementById("calc-extra");
+    const bgCheck = document.getElementById("calc-bg");
+    const totalBox = document.getElementById("calc-total");
+    const cards = document.querySelectorAll(".service-card");
 
-    // FOR OPENING ANC CLOSING TOS
-    function toggleTos() {
-      const content = document.getElementById('tos-content');
-      const arrow = document.getElementById('tos-arrow');
+    document.getElementById("extra-pct").textContent = extraPercent;
+    document.getElementById("bg-pct").textContent = bgPercent;
+    document.getElementById("rates-date").textContent = ratesDate;
 
-      content.classList.toggle('open');
+    cards.forEach(card => {
+      const option = document.createElement("option");
+      option.value = card.getAttribute("data-usd");
+      option.textContent = card.getAttribute("data-name");
+      typeSelect.appendChild(option);
+    });
 
-      if (content.classList.contains('open')) {
-        arrow.textContent = '▲';
-      } else {
-        arrow.textContent = '▼';
-      }
+    const guesses = { PH: "PHP", GB: "GBP", CA: "CAD", AU: "AUD", JP: "JPY", DE: "EUR", FR: "EUR", ES: "EUR", IT: "EUR", NL: "EUR", IE: "EUR" };
+    const country = (navigator.language || "").split("-")[1]?.toUpperCase();
+    if (country && guesses[country]) {
+      currency.value = guesses[country];
     }
+
+    function formatPrice(usd) {
+      const code = currency.value;
+      const price = usd * rates[code];
+      const formatted = (code === "PHP" || code === "JPY") ? Math.round(price) : price.toFixed(2);
+      return `${formatted} ${code}`;
+    }
+
+    function update() {
+      cards.forEach(card => {
+        const usd = Number(card.getAttribute("data-usd"));
+        const priceElem = card.querySelector(".service-price");
+        if (priceElem) priceElem.textContent = formatPrice(usd);
+      });
+
+      const base = Number(typeSelect.value);
+      const extra = Math.max(0, Number(extraInput.value));
+      let multiplier = 1 + extra * (extraPercent / 100);
+      if (bgCheck.checked) multiplier += bgPercent / 100;
+
+      totalBox.textContent = `TOTAL : ${formatPrice(base * multiplier)}`;
+    }
+
+    [currency, typeSelect, extraInput, bgCheck].forEach(el => el.addEventListener("change", update));
+    extraInput.addEventListener("input", update);
+
+    update();
   </script>
 
 </body>

@@ -801,6 +801,8 @@
 
       <div class="receipt" id="thanks-receipt"></div>
 
+      <p id="thanks-pay-info" style="display:none; color:#ffd6e0;"></p>
+
       <p>I'LL MESSAGE YOU SOON WITH PAYMENT DETAILS AND NEXT STEPS. IF YOU DON'T SEE THE EMAIL, CHECK YOUR SPAM FOLDER!</p>
 
       <div class="modal-actions">
@@ -823,9 +825,23 @@
     </div>
   </div>
 
+  <!-- EmailJS: sends the customer's receipt from your Gmail -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
   <script>
     
-    const orderEmail = "miooxiizanE@gmail.com";
+    const orderEmail = "miooxiizan@gmail.com";
+
+    /* EMAILJS (sends the receipt to the customer from your Gmail)
+       Paste the 3 values from your EmailJS dashboard. Until all 3 are filled in,
+       the site falls back to FormSubmit's receipt (which does not come from your Gmail). */
+    const emailjsConfig = {
+      serviceId:  "",   /* e.g. service_abc123  (Email Services) */
+      templateId: "",   /* e.g. template_abc123 (Email Templates) */
+      publicKey:  ""    /* Account > General > Public Key */
+    };
+    const emailjsReady = Boolean(emailjsConfig.serviceId && emailjsConfig.templateId && emailjsConfig.publicKey && window.emailjs);
+    if (emailjsReady) emailjs.init({ publicKey: emailjsConfig.publicKey });
 
     /* ============================================================
        COMMISSION STATUS
@@ -840,16 +856,18 @@
     if (demoStatus === "closed") commissionOpen = false;
 
     /* PAYMENT METHODS
-       "link" is optional. If you paste your payment link (PayPal.me, Ko-fi, etc.),
-       a PAY NOW button shows up in the thank you popup for that method. */
+       Each method has its own payment info that shows after the customer orders
+       (in the thank you popup AND in their emailed receipt):
+         details = text, like your GCash number or bank account
+         link    = your payment link (PayPal.me, Stripe, Ko-fi...), shows as a PAY NOW button
+       Leave both empty and the customer just sees "I'll email you the payment details". */
     const paymentMethods = [
-      { name: "GCash",               note: "Philippines e-wallet",                    link: "" },
-      { name: "Maya",                note: "Philippines e-wallet",                    link: "" },
-      { name: "PayPal",              note: "International, cards also work",          link: "" },
-      { name: "Credit / Debit Card", note: "Visa or Mastercard through a secure link", link: "" },
-      { name: "Bank Transfer",       note: "Local or international bank",             link: "" },
-      { name: "Ko-fi",               note: "Pay through my Ko-fi shop",               link: "" },
-      { name: "Other",               note: "Tell me in your idea box",                link: "" }
+      { name: "GCash",               note: "Philippines e-wallet",                     details: "", link: "" },
+      { name: "Maya",                note: "Philippines e-wallet",                     details: "", link: "" },
+      { name: "PayPal",              note: "International, cards also work",           details: "", link: "" },
+      { name: "Credit / Debit Card", note: "Visa or Mastercard through a secure link", details: "", link: "" },
+      { name: "Bank Transfer",       note: "Local or international bank",              details: "", link: "" },
+      { name: "Ko-fi",               note: "Pay through my Ko-fi shop",                details: "", link: "" }
     ];
 
 
@@ -1101,6 +1119,10 @@
       const orderNumber = makeOrderNumber();
       const service = data.get("service");
       const payment = data.get("payment_method");
+      const method = paymentMethods.find(m => m.name === payment);
+      const payLine = (method && (method.details || method.link))
+        ? `How to pay with ${payment}: ${[method.details, method.link].filter(Boolean).join(" | ")}`
+        : "I will email you soon with payment details and next steps.";
       const name = data.get("name");
       const email = data.get("email");
       const extras = Math.max(0, Number(orderExtra.value) || 0);
@@ -1124,7 +1146,7 @@ Payment method: ${payment}
 Estimated total: ${totalText}
 -----------------------------
 
-I will email you soon with payment details and next steps.
+${payLine}
 Payment is due in full when you place your order.
 Completion time: 1-2 weeks.
 
@@ -1132,7 +1154,7 @@ Thank you for supporting my art! - miooxii`;
 
       data.set("order_number", orderNumber);
       data.set("estimated_total", totalText);
-      data.set("_autoresponse", receiptText);
+      if (!emailjsReady) data.set("_autoresponse", receiptText);
 
       placeBtn.disabled = true;
       placeBtn.textContent = "SENDING...";
@@ -1146,6 +1168,21 @@ Thank you for supporting my art! - miooxii`;
         const result = await response.json();
 
         if (response.ok && (result.success === true || result.success === "true")) {
+          /* RECEIPT FROM YOUR GMAIL (EmailJS) */
+          if (emailjsReady) {
+            try {
+              await emailjs.send(emailjsConfig.serviceId, emailjsConfig.templateId, {
+                to_email: email,
+                to_name: name,
+                subject: "Your miooxii art comms order " + orderNumber,
+                order_number: orderNumber,
+                message: receiptText
+              });
+            } catch (err) {
+              console.error("EmailJS receipt failed:", err);
+            }
+          }
+
           /* THANKS POP UP */
           thanksEmail.textContent = email;
           thanksReceipt.innerHTML = `
@@ -1159,13 +1196,18 @@ Thank you for supporting my art! - miooxii`;
           `;
 
           /* PAY NOW BUTTON (only if you added a link for that method) */
-          const picked = paymentMethods.find(m => m.name === payment);
+          const picked = method;
+          const payInfo = document.getElementById("thanks-pay-info");
+          payInfo.textContent = (picked && picked.details)
+            ? picked.name.toUpperCase() + ": " + picked.details
+            : "I'LL EMAIL YOU THE " + payment.toUpperCase() + " PAYMENT DETAILS SOON.";
+          payInfo.style.display = "block";
           if (picked && picked.link) {
             thanksPay.href = picked.link;
             thanksPay.textContent = "PAY NOW WITH " + picked.name.toUpperCase();
             thanksPay.style.display = "block";
           } else {
-            thanksPay.style.display = "none"; 
+            thanksPay.style.display = "none";
           }
 
           thanksModal.classList.add("show");

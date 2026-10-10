@@ -729,7 +729,7 @@
           <div>
             <h3 class="section-title">4. PAYMENT METHOD</h3>
             <div class="radio-list" id="payment-list"></div>
-            <div class="field-note">I WILL EMAIL YOU THE PAYMENT DETAILS OR LINK RIGHT AFTER YOU PLACE YOUR ORDER. NEVER TYPE CARD NUMBERS IN THIS FORM!</div>
+            <div class="field-note">THE PAYMENT DETAILS SHOW UP RIGHT AFTER YOU PLACE YOUR ORDER AND ARE ALSO IN YOUR EMAIL RECEIPT. NEVER TYPE CARD NUMBERS IN THIS FORM!</div>
           </div>
 
           <div>
@@ -825,49 +825,33 @@
     </div>
   </div>
 
-  <!-- EmailJS: sends the customer's receipt from your Gmail -->
+  <!-- EMAILJS: RECEIPT FROM MY GMAIL? -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
   <script>
     
-    const orderEmail = "miooxiizan@gmail.com";
+    const orderEmail = "yuanvashtipimentel@gmail.com";
 
-    /* EMAILJS (sends the receipt to the customer from your Gmail)
-       Paste the 3 values from your EmailJS dashboard. Until all 3 are filled in,
-       the site falls back to FormSubmit's receipt (which does not come from your Gmail). */
+    /* EMAILJS (RECEIPT FOR THE GMAIL OF THE CUSTOMER) */
     const emailjsConfig = {
-      serviceId:  "",   /* e.g. service_abc123  (Email Services) */
-      templateId: "",   /* e.g. template_abc123 (Email Templates) */
-      publicKey:  ""    /* Account > General > Public Key */
+      serviceId:  "",    
+      templateId: "",  
+      publicKey:  ""    
     };
     const emailjsReady = Boolean(emailjsConfig.serviceId && emailjsConfig.templateId && emailjsConfig.publicKey && window.emailjs);
     if (emailjsReady) emailjs.init({ publicKey: emailjsConfig.publicKey });
 
-    /* ============================================================
-       COMMISSION STATUS
-       true  = open (orders go through)
-       false = closed (orders are blocked + popup + notify box shows)
-       ============================================================ */
+    /* COMMS STATS */
     let commissionOpen = true;
 
-    /* DEMO ONLY: add ?status=closed to the page link to show the closed version.
-       Delete these two lines before the site goes live. */
-    const demoStatus = new URLSearchParams(location.search).get("status");
-    if (demoStatus === "closed") commissionOpen = false;
 
-    /* PAYMENT METHODS
-       Each method has its own payment info that shows after the customer orders
-       (in the thank you popup AND in their emailed receipt):
-         details = text, like your GCash number or bank account
-         link    = your payment link (PayPal.me, Stripe, Ko-fi...), shows as a PAY NOW button
-       Leave both empty and the customer just sees "I'll email you the payment details". */
+    /* PAYMENT METHODS */
     const paymentMethods = [
-      { name: "GCash",               note: "Philippines e-wallet",                     details: "", link: "" },
-      { name: "Maya",                note: "Philippines e-wallet",                     details: "", link: "" },
-      { name: "PayPal",              note: "International, cards also work",           details: "", link: "" },
-      { name: "Credit / Debit Card", note: "Visa or Mastercard through a secure link", details: "", link: "" },
+      { name: "GCash",               note: "Philippines e-wallet",                     details: "GCash number: 09810146500", link: "" },
+      { name: "PayPal",              note: "International, cards also work",           details: "PayPal: 09810146500", link: "" },
+      { name: "Credit / Debit Card", note: "Visa or Mastercard through PayPal",        details: "Pay by card through PayPal. I will email you the link.", link: "" },
       { name: "Bank Transfer",       note: "Local or international bank",              details: "", link: "" },
-      { name: "Ko-fi",               note: "Pay through my Ko-fi shop",                details: "", link: "" }
+      { name: "Ko-fi",               note: "Pay through my Ko-fi shop",                details: "Pay on my Ko-fi page.", link: "https://ko-fi.com/miooxii" }
     ];
 
 
@@ -1032,8 +1016,7 @@
     function openClosedPopup() { closedModal.classList.add("show"); }
     function closeClosedPopup() { closedModal.classList.remove("show"); }
 
-    /* BLOCK THE ORDER WHEN CLOSED. This runs on click, before the browser checks the form,
-       so the popup shows even if the form is empty. */
+    /* BLOCK THE ORDER WHEN CLOSED */
     placeBtn.addEventListener("click", event => {
       if (!commissionOpen) {
         event.preventDefault();
@@ -1049,7 +1032,7 @@
     });
     closedModal.addEventListener("click", e => { if (e.target === closedModal) closeClosedPopup(); });
 
-    /* NOTIFY ME FORM: emails you the address so you can message them when you open */
+    /* NOTIFY ME FORM  */
     notifyForm.addEventListener("submit", async event => {
       event.preventDefault();
       notifyMsg.className = "notify-msg";
@@ -1095,7 +1078,7 @@
       event.preventDefault();
       orderError.style.display = "none";
 
-      /* SAFETY NET: never send an order while closed */
+      /* SO THAT THE ORDER WONT GO IN WHEN COMMS CLOSED */
       if (!commissionOpen) {
         openClosedPopup();
         return;
@@ -1130,27 +1113,36 @@
       const sketch = orderSketch.checked ? "Yes" : "No";
       const usd = getOrderUsd();
       const totalText = `${usd.toFixed(2)} USD (about ${formatPrice(usd)})`;
+      const description = data.get("description");
+      const otherContact = data.get("other_contact") || "none";
+      const imageCount = orderFiles.files.length;
 
       /* THE RECEIPT THEYLL RECIEVE */
       const receiptText =
-`Thank you for your order, ${name}! :3
+`✧･ﾟ: *✧･ﾟ:*  ORDER RECEIPT  *:･ﾟ✧*:･ﾟ✧
 
-ORDER RECEIPT
------------------------------
-Order number: ${orderNumber}
-Commission: ${service}
-Extra characters: ${extras}
-Background: ${background}
-Sketch progress: ${sketch}
-Payment method: ${payment}
-Estimated total: ${totalText}
------------------------------
+hiii ${name}!! thank you so much for your order ♡
+
+˚ ༘ ♡ order number: ${orderNumber}
+˚ ༘ ♡ commission: ${service}
+˚ ༘ ♡ extra characters: ${extras}
+˚ ༘ ♡ background: ${background}
+˚ ༘ ♡ sketch progress: ${sketch}
+˚ ༘ ♡ payment method: ${payment}
+˚ ༘ ♡ estimated total: ${totalText}
+
+your idea ♡
+${description}
+
+other contact: ${otherContact}
+reference images sent: ${imageCount}
 
 ${payLine}
-Payment is due in full when you place your order.
-Completion time: 1-2 weeks.
+payment is due in full when you place your order.
+completion time: 1-2 weeks
 
-Thank you for supporting my art! - miooxii`;
+thank you for supporting my art!! ₍ᐢ. .ᐢ₎
+- miooxii ⋆｡°✩`;
 
       data.set("order_number", orderNumber);
       data.set("estimated_total", totalText);

@@ -1133,7 +1133,7 @@
 
       /* THE RECEIPT THEYLL RECIEVE */
       const receiptText =
-`Thank you for your order, ${name}!
+`Thank you for your order, ${name}! :3
 
 ORDER RECEIPT
 -----------------------------
@@ -1195,7 +1195,7 @@ Thank you for supporting my art! - miooxii`;
             <div><span>TOTAL</span><span>${formatPrice(usd)}</span></div>
           `;
 
-          /* PAY NOW BUTTON (only if you added a link for that method) */
+          /* PAY NOW BUTTON */
           const picked = method;
           const payInfo = document.getElementById("thanks-pay-info");
           payInfo.textContent = (picked && picked.details)
@@ -1216,10 +1216,10 @@ Thank you for supporting my art! - miooxii`;
           orderForm.reset();
           update();
         } else {
-          showError((result.message || "SOMETHING WENT WRONG.").toUpperCase() + " PLEASE TRY AGAIN!");
+          showError((result.message || "SOMETHING WENT WRONG.:<").toUpperCase() + " PLEASE TRY AGAIN!");
         }
       } catch (error) {
-        showError("COULDN'T SEND YOUR ORDER. CHECK YOUR INTERNET AND TRY AGAIN!");
+        showError("COULDN'T SEND YOUR ORDER. CHECK YOUR INTERNET CONNECTION AND TRY AGAIN!");
       }
 
       placeBtn.disabled = false;

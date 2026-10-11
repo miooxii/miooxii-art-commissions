@@ -671,6 +671,9 @@
       <div class="receipt" id="thanks-receipt"></div>
       <p id="thanks-pay-info" style="display:none; color:#ffd6e0;"></p>
       <p>I'LL MESSAGE YOU SOON WITH PAYMENT DETAILS AND NEXT STEPS. IF YOU DON'T SEE THE EMAIL, CHECK YOUR SPAM FOLDER!</p>
+            <img id="thanks-qr" src="" alt="GCash QR code" style="display:none; width:100%; max-width:220px; margin:0 auto 14px; background:white; border:4px solid white; border-radius:12px;">
+      <p id="thanks-pay-note" style="display:none;"></p>
+
       <div class="modal-actions">
         <a class="place-btn" id="thanks-pay" href="#" target="_blank" rel="noopener" style="display:none;">PAY NOW</a>
         <button type="button" class="place-btn" id="thanks-close">YAY, OK!</button>
@@ -698,6 +701,8 @@
       templateId: "template_uzhh7da",
       publicKey:  "-WjxlnhG8Fv-kuP_M"
     };
+    const paypalUser = "https://paypal.me/miooxii";   // from paypal.me/YOUR-PAYPALME-NAME
+    const gcashQrImage = "miooxiigcash.jpe";       // screenshot of your GCash QR, in the same folder as index.html
     const emailjsReady = Boolean(emailjsConfig.serviceId && emailjsConfig.templateId && emailjsConfig.publicKey && window.emailjs);
     if (emailjsReady) emailjs.init({ publicKey: emailjsConfig.publicKey });
     /* COMMS STATS */
@@ -970,6 +975,27 @@
             <div><span>PAY FIRST</span><span>${paymentTiming === "50% upfront" ? formatPrice(usd / 2) : formatPrice(usd)}</span></div>
             <div><span>REMAINING LATER</span><span>${paymentTiming === "50% upfront" ? formatPrice(usd / 2) : "None"}</span></div>
           `;
+          /* PAY NOW: PayPal and card open your PayPal.Me, GCash shows your QR */
+          const payAmount = paymentTiming === "50% upfront" ? usd / 2 : usd;
+          const payButton = document.getElementById("thanks-pay");
+          const payQr = document.getElementById("thanks-qr");
+          const payNote = document.getElementById("thanks-pay-note");
+          payButton.style.display = "none";
+          payQr.style.display = "none";
+          payNote.style.display = "none";
+
+          if (payment === "PayPal" || payment === "Credit / Debit Card") {
+            payButton.href = "https://paypal.me/" + paypalUser + "/" + payAmount.toFixed(2) + "USD";
+            payButton.textContent = "PAY " + payAmount.toFixed(2) + " USD ON PAYPAL";
+            payButton.style.display = "block";
+          }
+
+          if (payment === "GCash") {
+            payQr.src = gcashQrImage;
+            payQr.style.display = "block";
+            payNote.textContent = "OPEN GCASH, TAP SCAN, AND SEND ABOUT " + formatPrice(payAmount) + " TO THIS QR.";
+            payNote.style.display = "block";
+          }
           thanksModal.classList.add("show");
           orderForm.reset();
           update();

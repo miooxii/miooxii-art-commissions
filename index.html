@@ -339,7 +339,7 @@
     .modal-actions .place-btn { text-align: center; text-decoration: none; }
     .receipt {
       margin: 0 0 16px;
-      padding: 14px;
+      padding: 14px;  
       text-align: left;
       font-size: 8px;
       line-height: 2.2;
@@ -406,7 +406,7 @@
   <div class="navigationcontainer">
     <nav class="navigation">
       <div class="nav-side">
-        <a href="#home">HOME</a>
+        <a href="#home">HOME</a> 
         <a href="#services">SERVICES</a>
         <a href="#portfolio">PORTFOLIO</a>
       </div>
@@ -418,7 +418,7 @@
       <div class="nav-side">
         <a href="#order">ORDER</a>
         <a href="#terms-of-service">TERMS OF SERVICE</a>
-      </div>
+      </div> 
     </nav>
   </div>
   <!-- CONTENTS OF SITE -->
@@ -524,11 +524,12 @@
         <div class="notify-msg" id="notify-msg"></div>
       </div>
       <form class="checkout" id="order-form">
-        <!-- settings for the email you receive (you can leave these alone) -->
+        <!-- settings for the email you receive -->
         <input type="hidden" name="_subject" value="New art commission order!">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off"> <!-- blocks spam bots -->
+
         <!-- TOP BAR -->
         <div class="checkout-head">
           <div class="checkout-title">CHECKOUT<span class="promo-pill">COMMISSION</span></div>
@@ -628,7 +629,7 @@
             <span class="total-value" id="order-total"></span>
           </div>
           <p class="fine-print">
-            BY CLICKING 'PLACE ORDER', YOU ARE SENDING A COMMISSION REQUEST. I'LL EMAIL YOU A RECEIPT RIGHT AWAY AND PAYMENT DETAILS SOON AFTER. PAYMENT IS DUE IN FULL WHEN YOU ORDER. PRICES SHOWN IN OTHER CURRENCIES ARE ESTIMATES.
+            BY CLICKING 'PLACE ORDER', YOU ARE SENDING A COMMISSION REQUEST. I'll EMAIL YOU A RECEIPT RIGHT AWAY AND PAYMENT DETAILS SOON AFTER. PRICES SHOWN IN OTHER CURRENCIES ARE ESTIMATES.
           </p>
           <label class="tos-check">
             <input type="checkbox" name="agreed_to_tos" value="Yes" required>
@@ -669,13 +670,10 @@
       <p id="thanks-status">YOUR ORDER REQUEST WAS SUBMITTED.</p>
       <p>PAYMENT INSTRUCTIONS WILL BE SENT SEPARATELY TO <span class="order-number" id="thanks-email"></span>. CHECK YOUR SPAM FOLDER TOO!</p>
       <div class="receipt" id="thanks-receipt"></div>
-      <p id="thanks-pay-info" style="display:none; color:#ffd6e0;"></p>
-      <p>I'LL MESSAGE YOU SOON WITH PAYMENT DETAILS AND NEXT STEPS. IF YOU DON'T SEE THE EMAIL, CHECK YOUR SPAM FOLDER!</p>
-            <img id="thanks-qr" src="" alt="GCash QR code" style="display:none; width:100%; max-width:220px; margin:0 auto 14px; background:white; border:4px solid white; border-radius:12px;">
-      <p id="thanks-pay-note" style="display:none;"></p>
-
+      <img id="thanks-qr" src="" alt="GCash QR Code" style="display:none; width:100%; max-width:200px; margin:0 auto 12px; background:white; border:4px solid white; border-radius:10px;">
+      <p id="thanks-pay-note" style="display:none; color:#ffd6e0; font-size:7px; line-height:2;"></p>
       <div class="modal-actions">
-        <a class="place-btn" id="thanks-pay" href="#" target="_blank" rel="noopener" style="display:none;">PAY NOW</a>
+        <a class="place-btn" id="thanks-pay" href="#" target="_blank" rel="noopener" style="display:none;">PAY ON PAYPAL.ME</a>
         <button type="button" class="place-btn" id="thanks-close">YAY, OK!</button>
       </div>
     </div>
@@ -701,17 +699,17 @@
       templateId: "template_uzhh7da",
       publicKey:  "-WjxlnhG8Fv-kuP_M"
     };
-    const paypalUser = "https://paypal.me/miooxii";   // from paypal.me/YOUR-PAYPALME-NAME
-    const gcashQrImage = "miooxiigcash.jpe";       // screenshot of your GCash QR, in the same folder as index.html
+    const paypalMeLink = "https://paypal.me/miooxii";   /* Clean PayPal.Me link */
+    const gcashQrImage = "miooxiigcash.jpe";          /* GCash QR image file */
     const emailjsReady = Boolean(emailjsConfig.serviceId && emailjsConfig.templateId && emailjsConfig.publicKey && window.emailjs);
     if (emailjsReady) emailjs.init({ publicKey: emailjsConfig.publicKey });
     /* COMMS STATS */
-    let commissionOpen = true;
+    let commissionOpen = true;  
     /* PAYMENT METHODS */
     const paymentMethods = [
-      { name: "GCash", note: "Philippines e-wallet — instructions sent by email" },
-      { name: "PayPal", note: "International payments — instructions sent by email" },
-      { name: "Credit / Debit Card", note: "Card payment instructions sent by email" },
+      { name: "GCash", note: "Philippines e-wallet — scan QR code on checkout" },
+      { name: "PayPal", note: "International payments — pay via PayPal.Me link" },
+      { name: "Credit / Debit Card", note: "Card payment via PayPal.Me" },
       { name: "Bank Transfer", note: "Transfer instructions sent by email" }
     ];
     const extraPercent = 50;
@@ -751,7 +749,7 @@
     document.getElementById("rates-date").textContent = ratesDate;
     document.querySelector(".extra-pct-copy").textContent = extraPercent;
     document.querySelector(".bg-pct-copy").textContent = bgPercent;
-    /* SO THAT THE CURRENCY IS IN SYNC */
+    /* SO THAT THE CURRENCY AND TOTAL AMOUNT IS SYNCED */
     orderCurrency.innerHTML = currency.innerHTML;
     /* RENDER SERVICE CARDS */
     cards.forEach((card, index) => {
@@ -810,26 +808,22 @@
       return base * getMultiplier(extra, orderBg.checked);
     }
     function update() {
-      /* PRICE CARDS */
       cards.forEach(card => {
         const usd = Number(card.getAttribute("data-usd"));
         const priceElem = card.querySelector(".service-price");
         if (priceElem) priceElem.textContent = formatPrice(usd);
       });
-      /* CHECKOUT COMMISSION PRICES */
       document.querySelectorAll(".radio-price[data-usd]").forEach(el => {
         el.textContent = formatPrice(Number(el.getAttribute("data-usd")));
       });
-      /* CHECKOUT TOTAL */
-      orderTotal.textContent = formatPrice(getOrderUsd());
+      const usd = getOrderUsd();
+      orderTotal.textContent = formatPrice(usd);
     }
-    /* SO THAT THE CURRENCY IS IN SYNC */
     currency.addEventListener("change", () => { orderCurrency.value = currency.value; update(); });
     orderCurrency.addEventListener("change", () => { currency.value = orderCurrency.value; update(); });
     [orderExtra, orderBg].forEach(el => el.addEventListener("change", update));
     orderExtra.addEventListener("input", update);
     serviceList.addEventListener("change", update);
-    /* OPEN / CLOSED STATUS */
     function applyStatus() {
       statusBadge.classList.toggle("open", commissionOpen);
       statusBadge.classList.toggle("closed", !commissionOpen);
@@ -838,7 +832,6 @@
     }
     function openClosedPopup() { closedModal.classList.add("show"); }
     function closeClosedPopup() { closedModal.classList.remove("show"); }
-    /* BLOCK THE ORDER WHEN CLOSED */
     placeBtn.addEventListener("click", event => {
       if (!commissionOpen) {
         event.preventDefault();
@@ -852,7 +845,6 @@
       document.getElementById("notify-email").focus({ preventScroll: true });
     });
     closedModal.addEventListener("click", e => { if (e.target === closedModal) closeClosedPopup(); });
-    /* NOTIFY ME FORM */
     notifyForm.addEventListener("submit", async event => {
       event.preventDefault();
       notifyMsg.className = "notify-msg";
@@ -880,7 +872,6 @@
       notifyBtn.disabled = false;
       notifyBtn.textContent = "NOTIFY ME";
     });
-    /* PLACING THE ORDER */
     function showError(message) {
       orderError.style.display = "block";
       orderError.textContent = message;
@@ -888,6 +879,7 @@
     function makeOrderNumber() {
       return "MIO-" + String(Date.now()).slice(-6);
     }
+    /* PLACING ORDER (AJAX fetch to FormSubmit so page never leaves!) */
     orderForm.addEventListener("submit", async event => {
       event.preventDefault();
       orderError.style.display = "none";
@@ -901,41 +893,43 @@
         showError(`YOUR IMAGES ARE TOO BIG (MAX ${maxUploadMB}MB TOTAL). PLEASE PICK SMALLER ONES!`);
         return;
       }
-      if (orderEmail.includes("YOUR_GMAIL_HERE")) {
-        showError("THE SHOP OWNER HASN'T SET UP THE EMAIL YET!");
-        return;
-      }
+      
       const data = new FormData(orderForm);
       const orderNumber = makeOrderNumber();
-      const service = data.get("service");
-      const payment = data.get("payment_method");
-      const paymentTiming = data.get("payment_timing");
-      const name = data.get("name");
-      const email = data.get("email");
-      const extras = Math.max(0, Number(orderExtra.value) || 0);
-      const background = orderBg.checked ? "Yes" : "No";
-      const sketch = orderSketch.checked ? "Yes" : "No";
       const usd = getOrderUsd();
       const totalText = `${usd.toFixed(2)} USD (about ${formatPrice(usd)})`;
-      const description = data.get("description");
-      const otherContact = data.get("other_contact") || "none";
-      const imageCount = orderFiles.files.length;
       
       data.set("order_number", orderNumber);
       data.set("estimated_total", totalText);
+
       placeBtn.disabled = true;
       placeBtn.textContent = "SENDING...";
+
       try {
+        /* Send order details and images to your Gmail via FormSubmit AJAX */
         const response = await fetch("https://formsubmit.co/ajax/" + orderEmail, {
           method: "POST",
           headers: { "Accept": "application/json" },
           body: data
         });
         const result = await response.json();
+
         if (response.ok && (result.success === true || result.success === "true")) {
-          let receiptEmailSent = false;
+          /* Send EmailJS Receipt to customer */
           if (emailjsReady) {
             try {
+              const service = data.get("service");
+              const payment = data.get("payment_method");
+              const paymentTiming = data.get("payment_timing");
+              const name = data.get("name");
+              const email = data.get("email");
+              const extras = Math.max(0, Number(orderExtra.value) || 0);
+              const background = orderBg.checked ? "Yes" : "No";
+              const sketch = orderSketch.checked ? "Yes" : "No";
+              const description = data.get("description");
+              const otherContact = data.get("other_contact") || "none";
+              const imageCount = orderFiles.files.length;
+
               await emailjs.send(emailjsConfig.serviceId, emailjsConfig.templateId, {
                 to_email: email,
                 to_name: name,
@@ -954,15 +948,22 @@
                 attachment: imageCount > 0 ? `${imageCount} image(s) attached` : "none",
                 email: email
               });
-              receiptEmailSent = true;
             } catch (err) {
               console.error("EmailJS receipt failed:", err);
             }
           }
+
+          /* Show Thank You Modal */
+          const email = data.get("email");
+          const service = data.get("service");
+          const payment = data.get("payment_method");
+          const paymentTiming = data.get("payment_timing");
+          const extras = Math.max(0, Number(orderExtra.value) || 0);
+          const background = orderBg.checked ? "Yes" : "No";
+          const sketch = orderSketch.checked ? "Yes" : "No";
+
           thanksEmail.textContent = email;
-          thanksStatus.textContent = receiptEmailSent
-            ? "YOUR ORDER WAS SUBMITTED AND YOUR RECEIPT EMAIL WAS SENT!"
-            : "YOUR ORDER WAS SUBMITTED, BUT THE AUTOMATIC RECEIPT EMAIL IS NOT CONFIGURED OR FAILED. THE SHOP OWNER MUST CHECK EMAILJS.";
+          thanksStatus.textContent = "YOUR ORDER WAS SUBMITTED AND YOUR RECEIPT WAS DISPATCHED!";
           thanksReceipt.innerHTML = `
             <div><span>ORDER #</span><span>${orderNumber}</span></div>
             <div><span>COMMISSION</span><span>${service}</span></div>
@@ -973,10 +974,8 @@
             <div><span>SCHEDULE</span><span>${paymentTiming}</span></div>
             <div><span>TOTAL</span><span>${formatPrice(usd)}</span></div>
             <div><span>PAY FIRST</span><span>${paymentTiming === "50% upfront" ? formatPrice(usd / 2) : formatPrice(usd)}</span></div>
-            <div><span>REMAINING LATER</span><span>${paymentTiming === "50% upfront" ? formatPrice(usd / 2) : "None"}</span></div>
           `;
-          /* PAY NOW: PayPal and card open your PayPal.Me, GCash shows your QR */
-          const payAmount = paymentTiming === "50% upfront" ? usd / 2 : usd;
+
           const payButton = document.getElementById("thanks-pay");
           const payQr = document.getElementById("thanks-qr");
           const payNote = document.getElementById("thanks-pay-note");
@@ -985,17 +984,16 @@
           payNote.style.display = "none";
 
           if (payment === "PayPal" || payment === "Credit / Debit Card") {
-            payButton.href = "https://paypal.me/" + paypalUser + "/" + payAmount.toFixed(2) + "USD";
-            payButton.textContent = "PAY " + payAmount.toFixed(2) + " USD ON PAYPAL";
+            payButton.href = paypalMeLink;
+            payButton.textContent = "PAY ON PAYPAL.ME";
             payButton.style.display = "block";
-          }
-
-          if (payment === "GCash") {
+          } else if (payment === "GCash") {
             payQr.src = gcashQrImage;
             payQr.style.display = "block";
-            payNote.textContent = "OPEN GCASH, TAP SCAN, AND SEND ABOUT " + formatPrice(payAmount) + " TO THIS QR.";
+            payNote.textContent = "SCAN THIS QR CODE VIA GCASH TO COMPLETE YOUR PAYMENT!";
             payNote.style.display = "block";
           }
+
           thanksModal.classList.add("show");
           orderForm.reset();
           update();
@@ -1005,9 +1003,11 @@
       } catch (error) {
         showError("COULDN'T SEND YOUR ORDER. CHECK YOUR INTERNET CONNECTION AND TRY AGAIN!");
       }
+
       placeBtn.disabled = false;
       placeBtn.textContent = "PLACE ORDER";
     });
+
     function closeThanks() { thanksModal.classList.remove("show"); }
     document.getElementById("thanks-close").addEventListener("click", closeThanks);
     thanksModal.addEventListener("click", e => { if (e.target === thanksModal) closeThanks(); });

@@ -826,7 +826,7 @@
       const selectedPayment = orderForm.querySelector('input[name="payment_method"]:checked');
       if (selectedPayment && selectedPayment.value === "Credit / Debit Card") {
         demoCardContainer.style.display = "block";
-        paymentInstructionsNote.textContent = "ENTER YOUR CARD DETAILS ABOVE, THEN PLACE YOUR ORDER. PAYMENT INSTRUCTIONS WILL ALSO BE SENT TO YOUR EMAIL.";
+        paymentInstructionsNote.textContent = "ENTER YOUR CARD DETAILS BELOW, THEN PLACE YOUR ORDER. PAYMENT INSTRUCTIONS WILL ALSO BE SENT TO YOUR EMAIL.";
       } else {
         demoCardContainer.style.display = "none";
         paymentInstructionsNote.textContent = "NO PAYMENT DETAILS OR PHONE NUMBERS ARE SHOWN HERE. AFTER YOU SUBMIT YOUR ORDER, PAYMENT INSTRUCTIONS WILL BE SENT TO THE EMAIL ADDRESS YOU ENTERED.";

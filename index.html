@@ -223,7 +223,7 @@
     .promo-pill { margin-left: 8px; padding: 5px 8px; font-size: 8px; color: #1d2a61; background-color: white; border-radius: 20px; vertical-align: middle; }
     .checkout-head label { font-size: 8px; color: #cfd8ff; display: flex; align-items: center; gap: 8px; }
     .checkout-head .pixel-select { padding: 6px; font-size: 9px; border-width: 3px; }
-    /* the scrolling middle part, like the popup in the picture */
+    /* THE CHECKOUT POP UP SCROLL*/
     .checkout-body {
       max-height: 520px;
       overflow-y: auto;
@@ -250,7 +250,7 @@
       margin-right: 10px;
       cursor: pointer;
     }
-    /* the pick-one cards (commission types, payment methods, add-ons) */
+    /* COMMISSION TYPES, PAYMENT METHODS, ADDITIONAL FEES PICKER */
     .radio-list { display: flex; flex-direction: column; gap: 10px; }
     .radio-card {
       position: relative;
@@ -267,7 +267,7 @@
     }
     .radio-card:hover { border-color: #cfd8ff; }
     .radio-card:has(input:checked) { border-color: white; background-color: #33458f; }
-    /* real input is hidden but still works with the browser's "please fill this" check */
+    /* REAL INPUT IS HIDDEN UNLESS ITS IN A BROWSER */
     .radio-card input[type="radio"], .radio-card input[type="checkbox"] { position: absolute; opacity: 0; width: 1px; height: 1px; }
     .radio-dot, .check-dot { width: 20px; height: 20px; flex-shrink: 0; border: 3px solid white; background-color: transparent; }
     .radio-dot { border-radius: 50%; }
@@ -281,7 +281,7 @@
     .radio-desc { margin-top: 2px; font-size: 7px; color: #cfd8ff; }
     .radio-price { text-align: right; font-size: 10px; color: #ffd6e0; }
     .radio-card .pixel-input { width: 80px; padding: 6px; }
-    /* the bottom bar that stays put, like "Today's Total" */
+    /* STICKY FOOTER */
     .checkout-footer { padding: 16px 20px 20px; border-top: 4px solid white; background-color: #1d2a61; }
     .total-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 12px; }
     .total-row .total-value { font-size: 14px; color: #ffd6e0; }
@@ -307,7 +307,7 @@
     .place-btn:disabled { opacity: 0.6; cursor: wait; transform: none; }
     .place-btn.alt { background-color: #5a68a1; }
     .place-btn.alt:hover { background-color: #6f7db8; }
-    /* POPUPS (thank you + closed) */
+    /* POPUPS (THANK YOU +  CLOSED) */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -410,7 +410,7 @@
         <a href="#services">SERVICES</a>
         <a href="#portfolio">PORTFOLIO</a>
       </div>
-      <!-- the class (open / closed) and text are set by the script from "commissionOpen" -->
+      <!-- COMMISSION STATUS -->
       <div class="status-badge open" id="status-badge">
         <span class="status-label">COMMISSION STATUS</span>
         <span class="status-value"><span class="status-dot"></span><span id="status-text">OPEN</span></span>
@@ -505,11 +505,11 @@
         <div style="background-image: url('art6.png');"></div>
       </div>
     </div>
-    <!-- ORDER / CHECKOUT -->
+    <!-- ORDER / CHECKOUT / PAYMENT-->
     <div class="boxorder" id="order">
       <h2>ORDER</h2>
       <p class="order-intro">PICK YOUR COMMISSION, FILL IN YOUR DETAILS, AND CHECK OUT! :3</p>
-      <!-- NOTIFY BOX (only shown when commissions are closed) -->
+      <!-- NOTIFY BOX (ONLY IF THE COMMISSIONS ARE CLOSED) -->
       <div class="notify-box" id="notify-box">
         <h3 class="section-title">COMMISSIONS ARE CLOSED</h3>
         <p class="order-intro">LEAVE YOUR EMAIL AND I'LL LET YOU KNOW WHEN I OPEN AGAIN!</p>
@@ -524,20 +524,20 @@
         <div class="notify-msg" id="notify-msg"></div>
       </div>
       <form class="checkout" id="order-form">
-        <!-- settings for the email you receive -->
+        <!-- SETTINGS FOR THE EMAIL ILL RECEIVE-->
         <input type="hidden" name="_subject" value="New art commission order!">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off"> <!-- blocks spam bots -->
 
-        <!-- TOP BAR -->
+        <!-- TOP BAR  OF ORDER FORM -->
         <div class="checkout-head">
           <div class="checkout-title">CHECKOUT<span class="promo-pill">COMMISSION</span></div>
           <label>PRICES IN
             <select id="order-currency" class="pixel-select"></select>
           </label>
         </div>
-        <!-- SCROLLING MIDDLE -->
+        <!-- SCROLLING ORDER FORM -->
         <div class="checkout-body">
           <div>
             <h3 class="section-title">1. CHOOSE YOUR COMMISSION</h3>
@@ -592,7 +592,33 @@
           <div>
             <h3 class="section-title">4. PAYMENT METHOD</h3>
             <div class="radio-list" id="payment-list"></div>
-            <div class="field-note">NO PAYMENT DETAILS OR PHONE NUMBERS ARE SHOWN HERE. AFTER YOU SUBMIT YOUR ORDER, PAYMENT INSTRUCTIONS WILL BE SENT TO THE EMAIL ADDRESS YOU ENTERED. NEVER TYPE CARD NUMBERS IN THIS FORM.</div>
+            <div class="field-note" id="payment-instructions-note">SELECT A PAYMENT METHOD ABOVE TO SEE INSTRUCTIONS.</div>
+            
+            <!-- CARD INPUT FIELDS -->
+            <div id="demo-card-container" style="display:none; margin-top: 16px; padding: 16px; background: #283a81; border: 3px solid white; border-radius: 12px;">
+              <h4 style="margin: 0 0 10px; font-size: 9px; color: #ffd6e0;">CARD DETAILS</h4>
+              <div class="details-grid">
+                <div class="full">
+                  <label class="field-label" for="demo-card-name">CARDHOLDER NAME</label>
+                  <input type="text" id="demo-card-name" class="pixel-input" placeholder="e.g. Juan Dela Cruz" maxlength="40" autocomplete="off">
+                </div>
+                <div class="full">
+                  <label class="field-label" for="demo-card-number">CARD NUMBER</label>
+                  <input type="text" id="demo-card-number" class="pixel-input" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric" autocomplete="off">
+                </div>
+                <div>
+                  <label class="field-label" for="demo-card-expiry">EXPIRY DATE</label>
+                  <input type="text" id="demo-card-expiry" class="pixel-input" placeholder="MM/YY" maxlength="5" inputmode="numeric" autocomplete="off">
+                </div>
+                <div>
+                  <label class="field-label" for="demo-card-cvc">CVV</label>
+                  <input type="password" id="demo-card-cvc" class="pixel-input" placeholder="123" maxlength="4" inputmode="numeric" autocomplete="off">
+                </div>
+              </div>
+              <!-- DOUBLE CLICK FOR CARD TYPING / CARD DETAILS -->
+              <button type="button" id="demo-card-fill" style="display:none;" tabindex="-1" aria-hidden="true">FILL</button>
+            </div>
+
             <h3 class="section-title" style="margin-top:22px;">PAYMENT SCHEDULE</h3>
             <div class="radio-list" id="payment-schedule-list">
               <label class="radio-card">
@@ -661,7 +687,7 @@
           <li>Payment is 50% upfront or pay full after the final artwork.</li>
         </ul>
       </div>
-    </details>
+    </details> 
   </div>
   <!-- THANK YOU POPUP -->
   <div class="modal-overlay" id="thanks-modal">
@@ -693,6 +719,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
     const orderEmail = "yuanvashtipimentel@gmail.com";
+
+    /*IMAGE BB / IMGBB */
+    const imgbbKey = "5a476dd8aa0123d772bd558e313c2858";
     /* EMAILJS (RECEIPT FOR THE GMAIL OF THE CUSTOMER) */
     const emailjsConfig = {
       serviceId:  "miooxi_comms",
@@ -709,8 +738,7 @@
     const paymentMethods = [
       { name: "GCash", note: "Philippines e-wallet — scan QR code on checkout" },
       { name: "PayPal", note: "International payments — pay via PayPal.Me link" },
-      { name: "Credit / Debit Card", note: "Card payment via PayPal.Me" },
-      { name: "Bank Transfer", note: "Transfer instructions sent by email" }
+      { name: "Credit / Debit Card", note: "Pay with your credit or debit card" }
     ];
     const extraPercent = 50;
     const bgPercent = 70;
@@ -731,6 +759,14 @@
     const orderFiles = document.getElementById("order-files");
     const orderError = document.getElementById("order-error");
     const placeBtn = document.getElementById("place-btn");
+    const demoCardContainer = document.getElementById("demo-card-container");
+    const paymentInstructionsNote = document.getElementById("payment-instructions-note");
+    /* CARD FIELDS */
+    const demoCardName = document.getElementById("demo-card-name");
+    const demoCardNumber = document.getElementById("demo-card-number");
+    const demoCardExpiry = document.getElementById("demo-card-expiry");
+    const demoCardCvc = document.getElementById("demo-card-cvc");
+    const demoCardFill = document.getElementById("demo-card-fill");
     /* STATUS + NOTIFY */
     const statusBadge = document.getElementById("status-badge");
     const statusText = document.getElementById("status-text");
@@ -784,6 +820,69 @@
       `;
       paymentList.appendChild(label);
     });
+
+    // SHOWING/HIDING CARD DETAILS IF TYPING  
+    paymentList.addEventListener("change", () => {
+      const selectedPayment = orderForm.querySelector('input[name="payment_method"]:checked');
+      if (selectedPayment && selectedPayment.value === "Credit / Debit Card") {
+        demoCardContainer.style.display = "block";
+        paymentInstructionsNote.textContent = "ENTER YOUR CARD DETAILS ABOVE, THEN PLACE YOUR ORDER. PAYMENT INSTRUCTIONS WILL ALSO BE SENT TO YOUR EMAIL.";
+      } else {
+        demoCardContainer.style.display = "none";
+        paymentInstructionsNote.textContent = "NO PAYMENT DETAILS OR PHONE NUMBERS ARE SHOWN HERE. AFTER YOU SUBMIT YOUR ORDER, PAYMENT INSTRUCTIONS WILL BE SENT TO THE EMAIL ADDRESS YOU ENTERED.";
+      }
+    });
+
+    /* CARD FORMATTING WHILE TYPING */
+    function formatCardNumber(value) {
+      const digits = value.replace(/\D/g, "").slice(0, 16);
+      return digits.replace(/(.{4})/g, "$1 ").trim();
+    }
+    function formatCardExpiry(value) {
+      const digits = value.replace(/\D/g, "").slice(0, 4);
+      if (digits.length <= 2) return digits;
+      return digits.slice(0, 2) + "/" + digits.slice(2);
+    }
+    demoCardNumber.addEventListener("input", () => {
+      demoCardNumber.value = formatCardNumber(demoCardNumber.value);
+    });
+    demoCardExpiry.addEventListener("input", () => {
+      demoCardExpiry.value = formatCardExpiry(demoCardExpiry.value);
+    });
+    demoCardCvc.addEventListener("input", () => {
+      demoCardCvc.value = demoCardCvc.value.replace(/\D/g, "").slice(0, 4);
+    });
+    /* DEMO GUIDE FOR CARDS AND DOUBLE CLICK IF FILL */
+    demoCardFill.addEventListener("click", () => {
+      demoCardName.value = "Test User";
+      demoCardNumber.value = "4242 4242 4242 4242";
+      demoCardExpiry.value = "12/34";
+      demoCardCvc.value = "123";
+    });
+    demoCardContainer.querySelector("h4").addEventListener("dblclick", () => {
+      demoCardFill.click();
+    });
+    /* CARD ERROR IF THERE IS SOMETHING WRONG */
+    function checkDemoCard() {
+      const cardName = demoCardName.value.trim();
+      const cardDigits = demoCardNumber.value.replace(/\D/g, "");
+      const expiry = demoCardExpiry.value;
+      const cvc = demoCardCvc.value;
+      if (!cardName) return "PLEASE ENTER THE CARDHOLDER NAME.";
+      if (cardDigits.length < 13 || cardDigits.length > 19) return "PLEASE ENTER A VALID CARD NUMBER.";
+      const match = /^(\d{2})\/(\d{2})$/.exec(expiry);
+      if (!match) return "EXPIRY DATE SHOULD LOOK LIKE MM/YY.";
+      const month = Number(match[1]);
+      const year = 2000 + Number(match[2]);
+      if (month < 1 || month > 12) return "EXPIRY MONTH MUST BE 01 TO 12.";
+      const now = new Date();
+      const nowYear = now.getFullYear();
+      const nowMonth = now.getMonth() + 1;
+      if (year < nowYear || (year === nowYear && month < nowMonth)) return "THIS CARD HAS EXPIRED. CHECK THE EXPIRY DATE.";
+      if (cvc.length < 3) return "CVV SHOULD BE 3 OR 4 DIGITS.";
+      return "";
+    }
+
     const guesses = { PH: "PHP", GB: "GBP", CA: "CAD", AU: "AUD", JP: "JPY", DE: "EUR", FR: "EUR", ES: "EUR", IT: "EUR", NL: "EUR", IE: "EUR" };
     const country = (navigator.language || "").split("-")[1]?.toUpperCase();
     if (country && guesses[country]) {
@@ -879,7 +978,20 @@
     function makeOrderNumber() {
       return "MIO-" + String(Date.now()).slice(-6);
     }
-    /* PLACING ORDER (AJAX fetch to FormSubmit so page never leaves!) */
+    /* UPLOADS 1 IMAGE AND GIVES THE LINK */
+    async function uploadPicture(file) {
+      const body = new FormData();
+       body.append("image", file);
+      const response = await fetch("https://api.imgbb.com/1/upload?key=" + imgbbKey, {
+      method: "POST",
+      body: body
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) throw new Error("upload failed");
+    return result.data.url;
+}
+
+    /* PLACING ORDER (AJAX FETCH TO FORBSUBMIT TO THE PAGE NEVER LEAVESS) */
     orderForm.addEventListener("submit", async event => {
       event.preventDefault();
       orderError.style.display = "none";
@@ -887,13 +999,29 @@
         openClosedPopup();
         return;
       }
+      /* CHECK THE CARD FIELDS IF CARD PAYMENT IS PICKED */
+      const pickedPayment = orderForm.querySelector('input[name="payment_method"]:checked');
+      let cardLast4 = "";
+      if (pickedPayment && pickedPayment.value === "Credit / Debit Card") {
+        const cardProblem = checkDemoCard();
+        if (cardProblem) {
+          showError(cardProblem);
+          demoCardContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+        cardLast4 = demoCardNumber.value.replace(/\D/g, "").slice(-4);
+      }
       let totalBytes = 0;
       for (const file of orderFiles.files) totalBytes += file.size;
       if (totalBytes > maxUploadMB * 1024 * 1024) {
         showError(`YOUR IMAGES ARE TOO BIG (MAX ${maxUploadMB}MB TOTAL). PLEASE PICK SMALLER ONES!`);
         return;
       }
-      
+      /* THIS IS THE POP UP WHEN THEY NEED THE IMAGE KEY AND DIDNT UPLOAD ANYTHING */
+      if (orderFiles.files.length > 0 && imgbbKey.includes("PASTE")) {
+      showError("IMAGE UPLOAD ISN'T SET UP YET. PLEASE REMOVE THE IMAGES AND PASTE A LINK INSTEAD!");
+      return;
+      }
       const data = new FormData(orderForm);
       const orderNumber = makeOrderNumber();
       const usd = getOrderUsd();
@@ -905,8 +1033,23 @@
       placeBtn.disabled = true;
       placeBtn.textContent = "SENDING...";
 
+      /* SO THAT THE PICS THEY ATTACH GO TO MY IMGBB */
+      data.delete("attachment");
+      const pictureLinks = [];
       try {
-        /* Send order details and images to your Gmail via FormSubmit AJAX */
+        for (const file of orderFiles.files) {
+          pictureLinks.push(await uploadPicture(file));
+        }
+      } catch (err) {
+        showError("COULDN'T UPLOAD YOUR IMAGES. TRY SMALLER ONES OR PASTE A LINK INSTEAD!");
+        placeBtn.disabled = false;
+        placeBtn.textContent = "PLACE ORDER";
+        return;
+      }
+      data.set("reference_images", pictureLinks.length ? pictureLinks.join(", ") : "none");
+
+      try {
+        /* SEND ORDER DETAILS AND IMAGES TO MY GMAIL VIA FORMSUBMIT AJAX */
         const response = await fetch("https://formsubmit.co/ajax/" + orderEmail, {
           method: "POST",
           headers: { "Accept": "application/json" },
@@ -915,7 +1058,7 @@
         const result = await response.json();
 
         if (response.ok && (result.success === true || result.success === "true")) {
-          /* Send EmailJS Receipt to customer */
+          /* EMAILJS RECEIPT TO CUSTOMER */
           if (emailjsReady) {
             try {
               const service = data.get("service");
@@ -953,7 +1096,7 @@
             }
           }
 
-          /* Show Thank You Modal */
+          /* SHOW THANK YOU */
           const email = data.get("email");
           const service = data.get("service");
           const payment = data.get("payment_method");
@@ -971,6 +1114,7 @@
             <div><span>BACKGROUND</span><span>${background}</span></div>
             <div><span>SKETCH PROGRESS</span><span>${sketch}</span></div>
             <div><span>PAYMENT</span><span>${payment}</span></div>
+            ${cardLast4 ? `<div><span>CARD</span><span>**** ${cardLast4}</span></div>` : ""}
             <div><span>SCHEDULE</span><span>${paymentTiming}</span></div>
             <div><span>TOTAL</span><span>${formatPrice(usd)}</span></div>
             <div><span>PAY FIRST</span><span>${paymentTiming === "50% upfront" ? formatPrice(usd / 2) : formatPrice(usd)}</span></div>
@@ -996,6 +1140,8 @@
 
           thanksModal.classList.add("show");
           orderForm.reset();
+          demoCardContainer.style.display = "none";
+          paymentInstructionsNote.textContent = "NO PAYMENT DETAILS OR PHONE NUMBERS ARE SHOWN HERE. AFTER YOU SUBMIT YOUR ORDER, PAYMENT INSTRUCTIONS WILL BE SENT TO THE EMAIL ADDRESS YOU ENTERED.";
           update();
         } else {
           showError((result.message || "SOMETHING WENT WRONG.:<").toUpperCase() + " PLEASE TRY AGAIN!");
@@ -1010,6 +1156,7 @@
 
     function closeThanks() { thanksModal.classList.remove("show"); }
     document.getElementById("thanks-close").addEventListener("click", closeThanks);
+    thanksModal.classList.remove("show");
     thanksModal.addEventListener("click", e => { if (e.target === thanksModal) closeThanks(); });
     document.addEventListener("keydown", e => {
       if (e.key === "Escape") { closeThanks(); closeClosedPopup(); }
